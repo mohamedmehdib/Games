@@ -56,7 +56,7 @@ export default function Memory() {
       });
       setTimeout(() => {
         generateRandomBoxes();
-      }, 1000);
+      }, 10000);
     }
   };
 
