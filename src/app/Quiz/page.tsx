@@ -17,20 +17,36 @@ const QuizGame: React.FC = () => {
 
   useEffect(() => {
     const fetchQuestions = async () => {
-      const res = await fetch(
-        'https://opentdb.com/api.php?amount=10&category=18&type=multiple'
-      );
-      const data = await res.json();
-      const formattedQuestions = data.results.map((q: any) => ({
-        question: q.question,
-        correct_answer: q.correct_answer,
-        incorrect_answers: q.incorrect_answers,
-      }));
-      setQuestions(formattedQuestions);
+      try {
+        const res = await fetch(
+          'https://opentdb.com/api.php?amount=10&category=18&type=multiple'
+        );
+  
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+  
+        const data = await res.json();
+  
+        if (!data.results || !Array.isArray(data.results)) {
+          throw new Error('Invalid data structure from API');
+        }
+  
+        const formattedQuestions = data.results.map((q: any) => ({
+          question: q.question,
+          correct_answer: q.correct_answer,
+          incorrect_answers: q.incorrect_answers,
+        }));
+        setQuestions(formattedQuestions);
+      } catch (error) {
+        console.error('Failed to fetch questions:', error);
+        setQuestions([]);
+      }
     };
-
+  
     fetchQuestions();
   }, []);
+  
 
   const handleAnswer = (answer: string) => {
     if (answer === questions[currentQuestionIndex].correct_answer) {
@@ -81,7 +97,7 @@ const QuizGame: React.FC = () => {
   );
 
   return (
-    <div className="flex flex-col items-center bg-black text-white h-screen">
+    <div className="flex flex-col items-center justify-center bg-black text-white h-screen">
       <h1 className="text-3xl font-bold">Quiz Game</h1>
       <div className="mt-8 w-3/5 p-6 bg-black shadow-md rounded-lg text-center">
         <p className="text-lg font-medium">{currentQuestion.question}</p>

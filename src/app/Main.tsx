@@ -12,7 +12,7 @@ export default function Main() {
 
   return (
     <div className="bg-black text-white min-h-screen">
-      <h1 className="text-center py-16 text-3xl">Welcome to Mohamed&apos;s Games!</h1>
+      <h1 className="text-center py-16 text-3xl">Welcome to Mohamed Mehdi&apos;s Games!</h1>
       <ul className="flex justify-center gap-6 flex-wrap">
         {
           games.map((item,index)=>(
