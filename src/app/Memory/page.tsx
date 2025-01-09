@@ -42,13 +42,13 @@ export default function Memory() {
       setShowGrid(true);
       generateRandomBoxes();
     }
-  }, [countdown]);
+  }, [countdown , generateRandomBoxes]);
 
   useEffect(() => {
     if (showGrid) {
       generateRandomBoxes();
     }
-  }, [stage]);
+  }, [stage , generateRandomBoxes , showGrid]);
 
   const handleBoxClick = (index: number) => {
     if (currentLights.includes(index)) {

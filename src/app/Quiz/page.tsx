@@ -8,6 +8,14 @@ type Question = {
   incorrect_answers: string[];
 };
 
+type ApiResponse = {
+  results: {
+    question: string;
+    correct_answer: string;
+    incorrect_answers: string[];
+  }[];
+};
+
 const QuizGame: React.FC = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -21,18 +29,18 @@ const QuizGame: React.FC = () => {
         const res = await fetch(
           'https://opentdb.com/api.php?amount=10&category=18&type=multiple'
         );
-  
+
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
-  
-        const data = await res.json();
-  
+
+        const data: ApiResponse = await res.json();
+
         if (!data.results || !Array.isArray(data.results)) {
           throw new Error('Invalid data structure from API');
         }
-  
-        const formattedQuestions = data.results.map((q: any) => ({
+
+        const formattedQuestions = data.results.map((q) => ({
           question: q.question,
           correct_answer: q.correct_answer,
           incorrect_answers: q.incorrect_answers,
@@ -43,10 +51,9 @@ const QuizGame: React.FC = () => {
         setQuestions([]);
       }
     };
-  
+
     fetchQuestions();
   }, []);
-  
 
   const handleAnswer = (answer: string) => {
     if (answer === questions[currentQuestionIndex].correct_answer) {
@@ -61,7 +68,7 @@ const QuizGame: React.FC = () => {
       } else {
         setIsGameOver(true);
       }
-    }, 10000);
+    }, 1000);
   };
 
   const resetGame = () => {
