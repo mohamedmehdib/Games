@@ -79,23 +79,25 @@ export default function Memory() {
       <div className="text-3xl font-bold text-center pb-5">
         Memory Matrix
       </div>
-      {!showGrid ? (
-        <div className={`text-5xl font-bold `}>{countdown}</div>
-      ) : (
-        <>
+      <div className="h-[50vh] flex items-center">
+        {!showGrid ? (
+          <div className={`text-5xl font-bold `}>{countdown}</div>
+        ) : (
+          <>
 
-          <div className="grid grid-cols-5 gap-1">
-            {boxes.map((_, index) => (
-              <button
-                key={index}
-                className={`w-16 h-16 rounded transition-all duration-300 ease-in-out ${bg[index]}`}
-                onClick={() => handleBoxClick(index)}
-                disabled={bg[index] === "bg-green-600 cursor-auto"}
-              />
-            ))}
-          </div>
-        </>
-      )}
+            <div className="grid grid-cols-5 gap-1">
+              {boxes.map((_, index) => (
+                <button
+                  key={index}
+                  className={`w-16 h-16 rounded transition-all duration-300 ease-in-out ${bg[index]}`}
+                  onClick={() => handleBoxClick(index)}
+                  disabled={bg[index] === "bg-green-600 cursor-auto"}
+                />
+              ))}
+            </div>
+          </>
+        )}
+      </div>
       <div className="text-center text-2xl pt-5">Stage: {stage}</div>
     </div>
   );
