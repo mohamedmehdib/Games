@@ -9,6 +9,8 @@ export default function Memory() {
     Array(25).fill("bg-gray-700 hover:bg-blue-600")
   );
   const [clickCount, setClickCount] = useState<number>(0);
+  const [countdown, setCountdown] = useState<number>(3);
+  const [showGrid, setShowGrid] = useState<boolean>(false);
 
   const generateRandomBoxes = () => {
     const newLights: number[] = [];
@@ -33,7 +35,19 @@ export default function Memory() {
   };
 
   useEffect(() => {
-    generateRandomBoxes();
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown((prev) => prev - 1), 1000);
+      return () => clearTimeout(timer);
+    } else {
+      setShowGrid(true);
+      generateRandomBoxes();
+    }
+  }, [countdown]);
+
+  useEffect(() => {
+    if (showGrid) {
+      generateRandomBoxes();
+    }
   }, [stage]);
 
   const handleBoxClick = (index: number) => {
@@ -56,25 +70,32 @@ export default function Memory() {
       });
       setTimeout(() => {
         generateRandomBoxes();
-      }, 10000);
+      }, 1000);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
-      <div className="text-3xl font-bold text-center pb-5">Memory Matrix</div>
-
-      <div className="grid grid-cols-5 gap-1">
-        {boxes.map((_, index) => (
-          <button
-            key={index}
-            className={`w-16 h-16 rounded transition-all duration-300 ease-in-out ${bg[index]}`}
-            onClick={() => handleBoxClick(index)}
-            disabled={bg[index] === "bg-green-600 cursor-auto"}
-          />
-        ))}
+      <div className="text-3xl font-bold text-center pb-5">
+        Memory Matrix
       </div>
+      {!showGrid ? (
+        <div className={`text-5xl font-bold `}>{countdown}</div>
+      ) : (
+        <>
 
+          <div className="grid grid-cols-5 gap-1">
+            {boxes.map((_, index) => (
+              <button
+                key={index}
+                className={`w-16 h-16 rounded transition-all duration-300 ease-in-out ${bg[index]}`}
+                onClick={() => handleBoxClick(index)}
+                disabled={bg[index] === "bg-green-600 cursor-auto"}
+              />
+            ))}
+          </div>
+        </>
+      )}
       <div className="text-center text-2xl pt-5">Stage: {stage}</div>
     </div>
   );

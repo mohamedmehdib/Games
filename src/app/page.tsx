@@ -1,10 +1,10 @@
-import Memory from "./Memory";
+import Main from "./Main";
 
 export default function Home() {
 
   return (
     <div>
-      <Memory/>
+      <Main/>
     </div>
   );
 }
