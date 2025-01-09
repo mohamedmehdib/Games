@@ -4,7 +4,10 @@ import Link from 'next/link';
 export default function Main() {
 
   const games = [
-    {src : "/memory.jpeg" , alt : "Memory"}
+    {src : "/memory.jpeg" , url : "Memory"},
+    {src : "/tic.jpeg" , url : "TicTacToe"},
+    {src : "/quiz.png" , url : "Quiz"},
+  
   ]
 
   return (
@@ -13,10 +16,10 @@ export default function Main() {
       <ul className="flex justify-center gap-6 flex-wrap">
         {
           games.map((item,index)=>(
-            <Link key={index} href="/Memory" className="w-60 h-60 relative border-2 border-white rounded-lg overflow-hidden">
+            <Link key={index} href={`/${item.url}`} className="hover:scale-110 transform transition-transform duration-300 w-60 h-60 relative border-2 border-white rounded-lg overflow-hidden">
               <Image
                 src={item.src}
-                alt={item.alt}
+                alt={item.url}
                 layout="fill"
                 className="object-cover transform transition-transform duration-300 scale-105 hover:scale-125"
               />
