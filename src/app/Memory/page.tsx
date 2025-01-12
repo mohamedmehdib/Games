@@ -28,7 +28,6 @@ export default function Memory() {
     setCurrentLights(newLights);
     setClickCount(0);
 
-    // Update box backgrounds
     setBg(updatedBoxes.map((box) => (box ? "bg-green-600" : "bg-gray-700")));
     setTimeout(() => {
       setBg(Array(25).fill("bg-gray-700 hover:bg-blue-600"));
