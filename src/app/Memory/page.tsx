@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 
 export default function Memory() {
   const [boxes, setBoxes] = useState<boolean[]>(Array(25).fill(false));
@@ -12,7 +12,7 @@ export default function Memory() {
   const [countdown, setCountdown] = useState<number>(3);
   const [showGrid, setShowGrid] = useState<boolean>(false);
 
-  const generateRandomBoxes = () => {
+  const generateRandomBoxes = useCallback(() => {
     const newLights: number[] = [];
     const updatedBoxes: boolean[] = Array(25).fill(false);
 
@@ -28,11 +28,12 @@ export default function Memory() {
     setCurrentLights(newLights);
     setClickCount(0);
 
+    // Update box backgrounds
     setBg(updatedBoxes.map((box) => (box ? "bg-green-600" : "bg-gray-700")));
     setTimeout(() => {
       setBg(Array(25).fill("bg-gray-700 hover:bg-blue-600"));
     }, 500);
-  };
+  }, [stage]);
 
   useEffect(() => {
     if (countdown > 0) {
@@ -42,13 +43,13 @@ export default function Memory() {
       setShowGrid(true);
       generateRandomBoxes();
     }
-  }, [countdown , generateRandomBoxes]);
+  }, [countdown, generateRandomBoxes]);
 
   useEffect(() => {
     if (showGrid) {
       generateRandomBoxes();
     }
-  }, [stage , generateRandomBoxes , showGrid]);
+  }, [stage, showGrid, generateRandomBoxes]);
 
   const handleBoxClick = (index: number) => {
     if (currentLights.includes(index)) {
@@ -57,10 +58,11 @@ export default function Memory() {
         newBg[index] = "bg-green-600 cursor-auto";
         return newBg;
       });
-      setClickCount((prev) => prev + 1);
+      const updatedClickCount = clickCount + 1;
+      setClickCount(updatedClickCount);
 
-      if (clickCount + 1 === currentLights.length) {
-        setStage((prevStage) => prevStage + 1);
+      if (updatedClickCount === currentLights.length) {
+        setTimeout(() => setStage((prevStage) => prevStage + 1), 500);
       }
     } else {
       setBg((prevBg) => {
@@ -76,26 +78,21 @@ export default function Memory() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
-      <div className="text-3xl font-bold text-center pb-5">
-        Memory Matrix
-      </div>
+      <div className="text-3xl font-bold text-center pb-5">Memory Matrix</div>
       <div className="h-[50vh] flex items-center">
         {!showGrid ? (
-          <div className={`text-5xl font-bold `}>{countdown}</div>
+          <div className="text-5xl font-bold">{countdown}</div>
         ) : (
-          <>
-
-            <div className="grid grid-cols-5 gap-1">
-              {boxes.map((_, index) => (
-                <button
-                  key={index}
-                  className={`w-16 h-16 rounded transition-all duration-300 ease-in-out ${bg[index]}`}
-                  onClick={() => handleBoxClick(index)}
-                  disabled={bg[index] === "bg-green-600 cursor-auto"}
-                />
-              ))}
-            </div>
-          </>
+          <div className="grid grid-cols-5 gap-1">
+            {boxes.map((_, index) => (
+              <button
+                key={index}
+                className={`w-16 h-16 rounded transition-all duration-300 ease-in-out ${bg[index]}`}
+                onClick={() => handleBoxClick(index)}
+                disabled={bg[index] === "bg-green-600 cursor-auto"}
+              />
+            ))}
+          </div>
         )}
       </div>
       <div className="text-center text-2xl pt-5">Stage: {stage}</div>
